@@ -196,6 +196,81 @@
     cursor:pointer;
   }
 
+  /* VIDEO TUTORIAL CARD */
+  .video-card{
+    width:100%;
+    border:none;
+    text-align:left;
+    background:linear-gradient(135deg, var(--orange) 0%, var(--orange-light) 100%);
+    border-radius:18px;
+    padding:16px 18px;
+    margin-bottom:18px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:14px;
+    box-shadow:0 8px 20px rgba(232,89,12,0.25);
+    font-family:inherit;
+    transition:all .15s ease;
+  }
+  .video-card:active{ transform:scale(0.98); }
+  .video-card .vc-icon{
+    font-size:22px;
+    width:46px; height:46px;
+    min-width:46px;
+    display:flex; align-items:center; justify-content:center;
+    background:rgba(255,255,255,0.22);
+    border-radius:12px;
+    color:#fff;
+  }
+  .video-card .vc-txt{ flex:1; }
+  .video-card .vc-txt .vc-title{
+    font-size:15px;
+    font-weight:700;
+    color:#fff;
+  }
+  .video-card .vc-txt .vc-desc{
+    font-size:11.5px;
+    color:rgba(255,255,255,0.9);
+    margin-top:2px;
+  }
+  .video-card .vc-chev{
+    font-size:18px;
+    color:#fff;
+  }
+
+  /* VIDEO MODAL */
+  .video-overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(10,10,10,0.94);
+    z-index:999;
+    align-items:center;
+    justify-content:center;
+    padding:16px;
+  }
+  .video-overlay.show{ display:flex; }
+  .video-overlay video{
+    width:100%;
+    max-width:480px;
+    max-height:85vh;
+    border-radius:12px;
+    box-shadow:0 10px 40px rgba(0,0,0,0.5);
+    background:#000;
+  }
+  .video-close{
+    position:absolute;
+    top:18px; right:18px;
+    width:38px; height:38px;
+    border-radius:50%;
+    background:rgba(255,255,255,0.15);
+    color:#fff;
+    border:none;
+    font-size:20px;
+    cursor:pointer;
+  }
+
   /* BIG BUTTONS */
   .big-btn{
     width:100%;
@@ -474,6 +549,16 @@
   <p class="subtitle" data-i18n="pageSubtitle">Suivez les étapes, puis appuyez sur un bouton</p>
   <p class="tap-hint" data-i18n="tapHint">👆 Appuyez sur une icône pour voir l'explication</p>
 
+  <!-- VIDEO TUTORIAL -->
+  <button class="video-card" id="videoBtn" onclick="openVideoModal()">
+    <div class="vc-icon">🎬</div>
+    <div class="vc-txt">
+      <div class="vc-title" data-i18n="videoBtnTitle">Regarder la vidéo explicative</div>
+      <div class="vc-desc" data-i18n="videoBtnDesc">Toutes les étapes en moins de 2 minutes</div>
+    </div>
+    <div class="vc-chev">▶</div>
+  </button>
+
   <!-- COMPACT STEP OVERVIEW -->
   <div class="overview">
     <div class="ov-step" onclick="showExplain(0, this)"><div class="ov-line"></div><div class="dot" id="dot0">📶</div><div class="lbl" id="lbl0" data-i18n="lblWifi">Wi-Fi</div></div>
@@ -595,7 +680,7 @@
     </div>
   </div>
 
-  <a class="big-btn primary" href="https://172.21.99.30:2018/webui/index.zul">
+  <a class="big-btn primary" href="https://iapformation.corp.sonatrach.dz:2018/webui/index.zul">
     <div class="icon">🟧</div>
     <div class="txt">
       <div class="title">ERP</div>
@@ -618,6 +703,11 @@
   <img id="zoomImg" src="" alt="">
 </div>
 
+<div class="video-overlay" id="videoOverlay">
+  <button class="video-close" onclick="closeVideoModal()">✕</button>
+  <video id="tutoVideo" controls playsinline></video>
+</div>
+
 <script>
 function openZoom(imgEl){
   const overlay = document.getElementById('zoomOverlay');
@@ -627,6 +717,19 @@ function openZoom(imgEl){
 }
 function closeZoom(){
   document.getElementById('zoomOverlay').classList.remove('show');
+}
+
+function openVideoModal(){
+  const overlay = document.getElementById('videoOverlay');
+  const video = document.getElementById('tutoVideo');
+  if(!video.src){ video.src = 'Mon_film_1_1.mp4'; }
+  overlay.classList.add('show');
+  video.play().catch(function(){});
+}
+function closeVideoModal(){
+  const video = document.getElementById('tutoVideo');
+  video.pause();
+  document.getElementById('videoOverlay').classList.remove('show');
 }
 
 const stepExplanations = [
@@ -725,6 +828,8 @@ const I18N = {
     pageTitle: "Évaluation des Formations",
     pageSubtitle: "Suivez les étapes, puis appuyez sur un bouton",
     tapHint: "👆 Appuyez sur une icône pour voir l'explication",
+    videoBtnTitle: "Regarder la vidéo explicative",
+    videoBtnDesc: "Toutes les étapes en moins de 2 minutes",
     lblWifi: "Wi-Fi",
     lblConnexion: "Connexion",
     lblEspace: "Espace<br>Apprenant",
@@ -761,6 +866,8 @@ const I18N = {
     pageTitle: "Training Evaluation",
     pageSubtitle: "Follow the steps, then tap a button",
     tapHint: "👆 Tap an icon to see the explanation",
+    videoBtnTitle: "Watch the tutorial video",
+    videoBtnDesc: "All the steps in under 2 minutes",
     lblWifi: "Wi-Fi",
     lblConnexion: "Login",
     lblEspace: "Learner<br>Portal",
@@ -797,6 +904,8 @@ const I18N = {
     pageTitle: "تقييم التكوينات",
     pageSubtitle: "اتبع الخطوات، ثم اضغط على زر",
     tapHint: "👆 اضغط على أيقونة لعرض الشرح",
+    videoBtnTitle: "مشاهدة الفيديو التوضيحي",
+    videoBtnDesc: "كل الخطوات في أقل من دقيقتين",
     lblWifi: "واي فاي",
     lblConnexion: "الدخول",
     lblEspace: "فضاء<br>المتكوّن",
