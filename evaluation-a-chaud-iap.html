@@ -769,7 +769,7 @@ let matriculeMap = {};
 let matriculeMapReady = false;
 fetch('matricules.json')
   .then(function(r){ return r.json(); })
-  .then(function(map){ matriculeMap = map; matriculeMapReady = true; })
+  .then(function(data){ matriculeMap = data.matriculeMap || data; matriculeMapReady = true; })
   .catch(function(err){ console.error('Impossible de charger matricules.json', err); });;
 
 function lookupMatricule(){
