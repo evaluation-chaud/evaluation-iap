@@ -381,6 +381,7 @@
         <div class="input">
           <span class="ic">🪪</span>
           <input type="text" id="erpAccountName" readonly placeholder="Compte ERP" value="">
+          <button type="button" onclick="copyErpAccountName(this)" data-i="copy">Copier</button>
         </div>
 
         <div class="input">
@@ -599,6 +600,13 @@ function copyText(btn, text){
   btn.textContent = '✓';
   btn.classList.add('copied');
   setTimeout(()=>{ btn.textContent = original; btn.classList.remove('copied'); }, 1200);
+}
+
+function copyErpAccountName(btn){
+  const input = document.getElementById('erpAccountName');
+  const value = input ? input.value : '';
+  if(!value) return;
+  copyText(btn, value);
 }
 
 function toggleQr(){
