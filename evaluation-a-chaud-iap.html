@@ -1017,7 +1017,7 @@ async function applyRoom(idx){
   netEl.textContent = '…';
   pwdEl.textContent = '…';
   try{
-    const res = await fetch(WORKER_BASE + '/api/wifi?room=' + roomKeys[idx], {cache:'no-store'});
+    const res = await fetch(WORKER_BASE + '/api/wifi?room=' + roomKeys[idx] + '&matricule=' + encodeURIComponent(currentMatricule), {cache:'no-store'});
     if(!res.ok) throw new Error('http '+res.status);
     const room = await res.json();
     netEl.textContent = room.ssid;
@@ -1350,11 +1350,13 @@ function toggleQr(){
 // en retour uniquement le nom correspondant, jamais la liste complète.
 
 let matriculeTimer;
+let currentMatricule = '';
 function lookupMatricule(value){
   clearTimeout(matriculeTimer);
   const out = document.getElementById('erpAccountName');
   value = value.trim();
-  if(!value){ out.value = ''; return; }
+currentMatricule = value;
+if(!value){ out.value = ''; return; }
   matriculeTimer = setTimeout(async ()=>{
     out.value = '…';
     try{
